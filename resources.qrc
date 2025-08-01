@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/new/prefix1_buttons_circle">
+        <file>pictures/button_v1.png</file>
+        <file>pictures/button_v2.png</file>
+        <file>pictures/red_cross (1).png</file>
+        <file>pictures/red_cross.png</file>
+        <file>pictures/red_cross_dark.png</file>
+        <file>pictures/Xrecorder_astra-edited-free (carve.photos).png</file>
+        <file>pictures/Xrecorder_astra_vers2 (1) (1).png</file>
+    </qresource>
+</RCC>
