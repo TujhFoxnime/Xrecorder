@@ -26,6 +26,8 @@ set(PROJECT_SOURCES
 	funcs/scr.cpp
 	funcs/show_cursor.cpp
 	funcs/scr.h
+	funcs/vid.cpp
+	funcs/vid.h
 	funcs/settings.cpp
 	funcs/settings.h
 

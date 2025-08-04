@@ -219,6 +219,7 @@ QPixmap Screenshot::shootScreen(const QRect& rect, int arg)
         show();
     qDebug() << "shootscreen is working";
     Screenshot::saveScreenshot();
+    return originalPixmap;
 }
 
 

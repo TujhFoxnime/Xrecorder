@@ -1,7 +1,14 @@
 #include <QStyle>
 #include <QMenu>
+#include <QSettings>
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+
+#define ORGANIZATION_NAME "EVILEG"
+#define ORGANIZATION_DOMAIN "www.evileg.ru"
+#define APPLICATION_NAME "QSettings Program"
+#define SETTINGS_TRAY "settings/tray"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::MainWindow)
@@ -19,7 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // набора системных иконок, задаем всплывающую подсказку
 
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(this->style()->standardIcon(QStyle::SP_ComputerIcon));
+    //trayIcon->setIcon(this->style()->standardIcon(QStyle::SP_ComputerIcon));
+    trayIcon->setIcon(QIcon(":/new/prefix1_buttons_circle/pictures/Xrecorder_astra_vers2 (1) (1).png"));
     trayIcon->setToolTip("Xrecorder");
 
     // контекстное меню из двух пунктов
@@ -54,6 +62,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     screenshotWidget = new Screenshot();
+
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    ui->trayCheckBoxONFFMouse->setChecked(settings.value(SETTINGS_TRAY, false).toBool());
 
 }
 
@@ -118,28 +129,72 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 
 
-void MainWindow::trayCheckBoxONFFMouse_stateChanged(int arg1) {}
 
+//  !
+void MainWindow::trayCheckBoxONFFMouse_stateChanged(int arg1) {
+
+    // чек-бокс запоминание предыдущего состояния (показ/скрытие мыши)
+    // !
+    // не проверено
+    // нужно ставить deb-пакетом и смотреть за реакцией
+    // !
+
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    if (ui->trayCheckBoxONFFMouse->isChecked()) {
+        settings.setValue(SETTINGS_TRAY, true);
+    } else {
+        settings.setValue(SETTINGS_TRAY, false);
+    }
+    settings.sync();
+}
+//  !
+
+
+
+//  !
 
 void MainWindow::on_radioButtonSCR_clicked()
 {
-    //Screen_mode_turn_on/off...
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    if (ui->radioButtonSCR->isChecked()) {
+        settings.setValue(SETTINGS_TRAY, true);
+    } else {
+        settings.setValue(SETTINGS_TRAY, false);
+    }
+    settings.sync();
 }
 
+//  !
 
 void MainWindow::on_radioButtonVID_clicked()
 {
-    //Video_mode_turn_on/off...
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    if (ui->radioButtonVID->isChecked()) {
+        settings.setValue(SETTINGS_TRAY, true);
+    } else {
+        settings.setValue(SETTINGS_TRAY, false);
+    }
+    settings.sync();
 }
 
+//  !
 
 void MainWindow::on_pushButtonScreenCapture_2_clicked()
 {
-    this->hide();
-    int checkState = ui->trayCheckBoxONFFMouse->checkState();
-    QRect fullScreenRect = QGuiApplication::primaryScreen()->geometry();
-    screenshotWidget->shootScreen(fullScreenRect, checkState);
-    this->show();
+    if (ui->radioButtonSCR->isChecked()) {
+        this->hide();
+        int checkState = ui->trayCheckBoxONFFMouse->checkState();
+        QRect fullScreenRect = QGuiApplication::primaryScreen()->geometry();
+        screenshotWidget->shootScreen(fullScreenRect, checkState);
+        this->show();
+    }
+    else if (ui->radioButtonVID->isChecked()) {
+
+
+    } else {
+        // выброс исключения
+    }
+
     qDebug() << "button is working";
 }
 
