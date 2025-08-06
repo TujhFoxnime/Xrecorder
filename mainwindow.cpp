@@ -99,6 +99,18 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
+
+void MainWindow::openArea()
+{
+    areaShow = new modes_area(this);
+    //
+    //
+    //
+    //
+    areaShow->show();
+}
+
+
 // метод обработки нажатия на иконку приложения в трее
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -126,8 +138,6 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
 
 
 // логика срабатывания захвата экрана
-
-
 
 
 //  !
@@ -179,9 +189,26 @@ void MainWindow::on_radioButtonVID_clicked()
 
 //  !
 
+
+
 void MainWindow::on_pushButtonScreenCapture_2_clicked()
 {
+    if (ui->radioButtonFullArea->isChecked()) {
+
+        // сделать дефолтным
+
+    } else if (ui->radioButtonWindowArea->isChecked()) {
+
+    } else {
+        // SelectedArea checkbox
+
+        openArea();
+
+    }
     if (ui->radioButtonSCR->isChecked()) {
+
+        // сделать дефолтным
+
         this->hide();
         int checkState = ui->trayCheckBoxONFFMouse->checkState();
         QRect fullScreenRect = QGuiApplication::primaryScreen()->geometry();
@@ -192,9 +219,9 @@ void MainWindow::on_pushButtonScreenCapture_2_clicked()
 
 
     } else {
-        // выброс исключения
+        // выброс исключения "не выбран режим захвата"
     }
+
 
     qDebug() << "button is working";
 }
-

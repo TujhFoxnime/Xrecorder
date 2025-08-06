@@ -79,7 +79,7 @@ border-radius: 11px;*/
      <property name="title">
       <string/>
      </property>
-     <widget class="QRadioButton" name="radioButton_4">
+     <widget class="QRadioButton" name="radioButtonSelectedArea">
       <property name="geometry">
        <rect>
         <x>195</x>
@@ -95,7 +95,7 @@ border-radius: 11px;*/
        <string>Область</string>
       </property>
      </widget>
-     <widget class="QRadioButton" name="radioButton_5">
+     <widget class="QRadioButton" name="radioButtonWindowArea">
       <property name="geometry">
        <rect>
         <x>330</x>
@@ -219,7 +219,7 @@ border-radius: lipx;
        </item>
       </layout>
      </widget>
-     <widget class="QRadioButton" name="radioButton_3">
+     <widget class="QRadioButton" name="radioButtonFullArea">
       <property name="geometry">
        <rect>
         <x>20</x>
