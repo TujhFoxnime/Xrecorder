@@ -1,8 +1,12 @@
 #include <QStyle>
 #include <QMenu>
+#include <QTime>
+#include <QTimer>
 #include <QSettings>
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "./funcs/ui_areacapture.h"
+
 
 #define ORGANIZATION_NAME "EVILEG"
 #define ORGANIZATION_DOMAIN "www.evileg.ru"
@@ -27,7 +31,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     trayIcon = new QSystemTrayIcon(this);
     //trayIcon->setIcon(this->style()->standardIcon(QStyle::SP_ComputerIcon));
-    trayIcon->setIcon(QIcon(":/new/prefix1_buttons_circle/pictures/Xrecorder_astra_vers2 (1) (1).png"));
+    trayIcon->setIcon(QIcon(":/new/"
+                            "prefix1_buttons_circle/"
+                            "pictures/"
+                            "Xrecorder_astra_vers2 (1) (1).png"));
     trayIcon->setToolTip("Xrecorder");
 
     // контекстное меню из двух пунктов
@@ -95,19 +102,33 @@ void MainWindow::closeEvent(QCloseEvent *event)
                               tr("Приложение свернуто в трей. "
        "Для того, чтобы развернуть окно приложения,"
                                  " щелкните по иконке приложения в трее"),
-                              icon, 4000);
+                              icon, 1500);
     }
 }
 
 
-void MainWindow::openArea()
+void MainWindow::openAreaCapture()
 {
-    areaShow = new modes_area(this);
-    //
-    //
-    //
-    //
-    areaShow->show();
+    areaShow = new AreaCapture(this);
+    areaShow->showFullScreen();
+    qDebug() << "Window visible" << areaShow->isVisible();
+    QTime dieTime = QTime::currentTime().addSecs(7);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+    areaShow->close();
+    /*areaShow->setWindowTitle("NewArea");
+    areaShow->setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
+    areaShow->setParent(0);
+    areaShow->setAttribute(Qt::WA_NoSystemBackground, true);
+    areaShow->setAttribute(Qt::WA_TranslucentBackground, true);
+    areaShow->setAttribute(Qt::WA_PaintOnScreen);
+    setGeometry(QGuiApplication::primaryScreen()->geometry());
+    areaShow->setStyleSheet("background-color: rgba(0, 0, 0, 150);");*/
+    //areaShow->show();
+    /*QTime dieTime = QTime::currentTime().addSecs(7);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+    areaShow->close();*/
 }
 
 
@@ -193,21 +214,24 @@ void MainWindow::on_radioButtonVID_clicked()
 
 void MainWindow::on_pushButtonScreenCapture_2_clicked()
 {
-    if (ui->radioButtonFullArea->isChecked()) {
-
-        // сделать дефолтным
-
+    if (ui->radioButtonSelectedArea->isChecked()) {
+        openAreaCapture();
+        //
+        //
     } else if (ui->radioButtonWindowArea->isChecked()) {
-
-    } else {
-        // SelectedArea checkbox
-
-        openArea();
-
+        //
+        //
+        //
+    } else if (ui->radioButtonFullArea->isChecked()) {
+        //
+        // сделать дефолтным в чекбоксе (при запуске)
+        // передать изображение режиму обработки скрина
     }
+
+
     if (ui->radioButtonSCR->isChecked()) {
 
-        // сделать дефолтным
+        // сделать дефолтным в чекбоксе (при запуске)
 
         this->hide();
         int checkState = ui->trayCheckBoxONFFMouse->checkState();
@@ -215,11 +239,11 @@ void MainWindow::on_pushButtonScreenCapture_2_clicked()
         screenshotWidget->shootScreen(fullScreenRect, checkState);
         this->show();
     }
+
     else if (ui->radioButtonVID->isChecked()) {
-
-
-    } else {
-        // выброс исключения "не выбран режим захвата"
+        //
+        //
+        //
     }
 
 

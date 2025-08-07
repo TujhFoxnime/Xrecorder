@@ -144,9 +144,8 @@ QImage getCursorImage(Display *display, int &hotspotX, int &hotspotY) {
     }
     QImage cursorImg = image.copy();
     XFree(cursor);
-    return cursorImg;
-
     qDebug() << "get img cursor2";
+    return cursorImg;
 }
 
 

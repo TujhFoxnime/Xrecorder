@@ -9,7 +9,7 @@
 
 
 #include <funcs/scr.h>
-#include <funcs/modes_area.h>
+#include <funcs/areacapture.h>
 
 
 
@@ -33,7 +33,7 @@ private slots:
     // слот нажатия на иконку приложения в трее
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
 
-    void openArea();
+    void openAreaCapture();
 
     void trayCheckBoxONFFMouse_stateChanged(int arg1);
 
@@ -48,7 +48,7 @@ private:
     QSystemTrayIcon *trayIcon;
     // объявление объекта будущей иконки для трея
     Screenshot *screenshotWidget;
-    modes_area *areaShow;
+    AreaCapture *areaShow;
 };
 
 #endif // MAINWINDOW_H

@@ -30,9 +30,11 @@ set(PROJECT_SOURCES
 	funcs/vid.h
 	funcs/settings.cpp
 	funcs/settings.h
-	funcs/modes_area.cpp
-	funcs/modes_area.h
-
+	funcs/areacapture.cpp
+	funcs/areacapture.h
+	funcs/areacapture.ui
+	funcs/areaselector.cpp
+	funcs/areaselector.h
 
 )
 
