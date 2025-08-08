@@ -9,6 +9,7 @@
 
 
 #include <funcs/scr.h>
+#include <funcs/areaselector.h>
 #include <funcs/areacapture.h>
 
 
@@ -49,6 +50,7 @@ private:
     // объявление объекта будущей иконки для трея
     Screenshot *screenshotWidget;
     AreaCapture *areaShow;
+    AreaSelector *areaMake;
 };
 
 #endif // MAINWINDOW_H

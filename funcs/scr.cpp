@@ -153,12 +153,9 @@ QImage getCursorImage(Display *display, int &hotspotX, int &hotspotY) {
 QPixmap Screenshot::shootScreen(const QRect& rect, int arg)
 {
     QScreen *screen = QGuiApplication::primaryScreen();
-    /*if (const QWindow *window = windowHandle())
-        screen = window->screen();*/
+
     if (!screen)
         return QPixmap();
-    /*if (delaySpinBox->value() != 0)
-        QApplication::beep();*/
 
     delay();
 
@@ -208,7 +205,7 @@ QPixmap Screenshot::shootScreen(const QRect& rect, int arg)
         }
 
         XCloseDisplay(display);
-        qDebug() << "display closed";;
+        qDebug() << "display closed";
     }
 
     updateScreenshotLabel();

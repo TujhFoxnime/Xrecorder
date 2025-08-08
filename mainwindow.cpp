@@ -107,6 +107,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 }
 
 
+
 void MainWindow::openAreaCapture()
 {
     areaShow = new AreaCapture(this);
@@ -214,22 +215,16 @@ void MainWindow::on_radioButtonVID_clicked()
 
 void MainWindow::on_pushButtonScreenCapture_2_clicked()
 {
-    if (ui->radioButtonSelectedArea->isChecked()) {
-        openAreaCapture();
-        //
-        //
-    } else if (ui->radioButtonWindowArea->isChecked()) {
-        //
-        //
-        //
-    } else if (ui->radioButtonFullArea->isChecked()) {
-        //
-        // сделать дефолтным в чекбоксе (при запуске)
-        // передать изображение режиму обработки скрина
-    }
+    if (ui->radioButtonSelectedArea->isChecked() && ui->radioButtonSCR->isChecked()) {
+        AreaSelector selector;
+        selector.exec();
+        QPixmap capturedArea = selector.getSelectedArea();
+        this->hide();
+        int checkState = ui->trayCheckBoxONFFMouse->checkState();
+        selector.saveScreenshot(capturedArea/*, checkState*/);
+        this->show();
 
-
-    if (ui->radioButtonSCR->isChecked()) {
+    } else if (ui->radioButtonFullArea->isChecked() && ui->radioButtonSCR->isChecked()) {
 
         // сделать дефолтным в чекбоксе (при запуске)
 
