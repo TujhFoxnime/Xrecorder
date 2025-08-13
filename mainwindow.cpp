@@ -5,13 +5,13 @@
 #include <QSettings>
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "./funcs/ui_areacapture.h"
-
 
 #define ORGANIZATION_NAME "EVILEG"
 #define ORGANIZATION_DOMAIN "www.evileg.ru"
 #define APPLICATION_NAME "QSettings Program"
 #define SETTINGS_TRAY "settings/tray"
+
+
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -108,7 +108,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 
 
-void MainWindow::openAreaCapture()
+/*void MainWindow::openAreaCapture()
 {
     areaShow = new AreaCapture(this);
     areaShow->showFullScreen();
@@ -116,7 +116,7 @@ void MainWindow::openAreaCapture()
     QTime dieTime = QTime::currentTime().addSecs(7);
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-    areaShow->close();
+    areaShow->close();*/
     /*areaShow->setWindowTitle("NewArea");
     areaShow->setWindowFlags(Qt::FramelessWindowHint | Qt::Window);
     areaShow->setParent(0);
@@ -130,7 +130,7 @@ void MainWindow::openAreaCapture()
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     areaShow->close();*/
-}
+//}
 
 
 // метод обработки нажатия на иконку приложения в трее
@@ -216,12 +216,18 @@ void MainWindow::on_radioButtonVID_clicked()
 void MainWindow::on_pushButtonScreenCapture_2_clicked()
 {
     if (ui->radioButtonSelectedArea->isChecked() && ui->radioButtonSCR->isChecked()) {
-        AreaSelector selector;
-        selector.exec();
-        QPixmap capturedArea = selector.getSelectedArea();
-        this->hide();
+
         int checkState = ui->trayCheckBoxONFFMouse->checkState();
-        selector.saveScreenshot(capturedArea/*, checkState*/);
+
+        AreaSelector selector;
+        //selector.setCheckState(checkState);
+        selector.exec();
+
+        QRect fullScreenRect = QGuiApplication::primaryScreen()->geometry();
+        QPixmap capturedArea = selector.getSelectedArea(/*fullScreenRect, checkState*/);
+
+        this->hide();
+        selector.saveScreenshot(capturedArea);
         this->show();
 
     } else if (ui->radioButtonFullArea->isChecked() && ui->radioButtonSCR->isChecked()) {

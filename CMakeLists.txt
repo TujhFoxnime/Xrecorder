@@ -30,12 +30,10 @@ set(PROJECT_SOURCES
 	funcs/vid.h
 	funcs/settings.cpp
 	funcs/settings.h
-	funcs/areacapture.cpp
-	funcs/areacapture.h
-	funcs/areacapture.ui
 	funcs/areaselector.cpp
 	funcs/areaselector.h
-
+	funcs/drawcursorcheckbox.cpp
+	funcs/drawcursorcheckbox.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

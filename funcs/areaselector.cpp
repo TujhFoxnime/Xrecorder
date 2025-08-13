@@ -1,5 +1,7 @@
 #include "areaselector.h"
 
+//#undef Status
+
 #include <QGuiApplication>
 #include <QPainter>
 #include <QMouseEvent>
@@ -84,10 +86,16 @@ void AreaSelector::mouseReleaseEvent(QMouseEvent *event)
         //
         QRect selectionRect(startPos, endPos);
         selectionRect = selectionRect.normalized();
-        selectedArea = screenCapture.copy(selectionRect);
+        //selectedArea = screenCapture.copy(selectionRect);
+        selectedArea = getCursorOnArea(selectionRect, currentCheckState);
 
         close();
     }
+}
+
+void AreaSelector::setCheckState(int state)
+{
+    currentCheckState = state;
 }
 
 
@@ -103,21 +111,81 @@ void AreaSelector::keyPressEvent(QKeyEvent *event)
 
 
 
-QPixmap AreaSelector::getSelectedArea() const
+QPixmap AreaSelector::getCursorOnArea(const QRect& rect, int arg) // получение курсора по чекбоксу
+{
+    QScreen *screen = QGuiApplication::primaryScreen();
+
+    if (!screenCapture.rect().contains(rect)) {
+        qWarning() << "if (!screenCapture.rect().contains(rect))";
+        return QPixmap();
+    }
+    //delay();
+
+    selectedArea = screenCapture.copy(rect);
+    qDebug() << "originalPixmap";
+
+
+    if (arg == 2) {
+        QPixmap cursorPixmap = screen->grabWindow(0, QCursor::pos().x(), QCursor::pos().y(), 100, 100);
+        QPainter painter(&selectedArea);
+        painter.drawPixmap(QCursor::pos().x() - rect.x(), QCursor::pos().y() - rect.y(), cursorPixmap);
+
+        //qDebug() << "arg if";
+
+        Display *display = XOpenDisplay(nullptr);
+        if (!display) {
+            qWarning() << "Cannot open X display";
+            return selectedArea;
+        }
+
+        int hotspotX = 0, hotspotY = 0;
+
+        QImage cursorImg = getCursorImage(display, hotspotX, hotspotY);
+
+        Window root = DefaultRootWindow(display);
+        int rootX, rootY;
+        unsigned int mask;
+        Window retRoot, retChild;
+        XQueryPointer(display, root, &retRoot, &retChild,
+                          &rootX, &rootY, &rootX, &rootY, &mask);
+
+        if (!cursorImg.isNull()) {
+            QPainter painter(&selectedArea);
+            painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+
+            int cursorX = rootX - hotspotX - rect.x();
+            int cursorY = rootY - hotspotY - rect.y();
+
+            if (QRect(0, 0, rect.width(), rect.height()).contains(QPoint(cursorX, cursorY))) {
+                painter.drawImage(cursorX, cursorY, cursorImg);
+            } else {
+                qWarning() << "Курсор не попал в снимок экрана!";
+            }
+
+            painter.end();
+        } else {
+            qWarning() << "Cursor image is null";
+        }
+
+        XCloseDisplay(display);
+        qDebug() << "display closed";
+    }
+
+
+    qDebug() << "shootscreen is working";
+
+    return selectedArea;
+}
+
+
+QPixmap AreaSelector::getSelectedArea(/*QPixmap screen, int arg*/)
 {
     return selectedArea;
 }
 
 
-void AreaSelector::saveScreenshot(QPixmap screen)
+void AreaSelector::saveScreenshot(QPixmap screen/*, int arg*/)
 {
-    //const QString namePicture = "yyyy.MM.dd_hh:mm:ss";
-    //QString initialPath = QDir::homePath();
-
-    //originalPixmap.save(namePicture);
-
-
-
     const QString format = ".png";
     QString initialPath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
     if (initialPath.isEmpty())
@@ -126,8 +194,7 @@ void AreaSelector::saveScreenshot(QPixmap screen)
     QString nameDate = curdate.toString("yyyy.MM.dd - hh:mm:ss");
     initialPath += tr("/") + nameDate + format;
 
-    // settings menu
-
+    // settings menu (выбор папки сохранения default/select)
 
     QFileDialog fileDialog(this, tr("Save As"), initialPath);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
